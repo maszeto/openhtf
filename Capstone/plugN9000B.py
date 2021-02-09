@@ -54,5 +54,19 @@ class plugN9000B:
         else:
             return True
 
+    def trace(self, method):
+    
+        if(method == 'WRIT'):
+            return self.write(':TRACe:MONitor:TYPE %s' % ('WRITe'))
+        elif(method == 'AVER'):
+            return self.write(':TRACe:MONitor:TYPE %s' % ('AVERage'))
+        elif(method == 'MAXH'):
+            return self.write(':TRACe:MONitor:TYPE %s' % ('MAXHold'))
+        elif(method == 'MINH'):
+            return self.write(':TRACe:MONitor:TYPE %s' % ('MINHold'))
+        else:
+            print("Invalid method, please use one of the following\nWRIT:\nAVER:\nMAXH:\nMINH:\n")
+
+
     def write(self, command):
         return self.instrument.write(command)
