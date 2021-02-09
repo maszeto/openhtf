@@ -55,4 +55,4 @@ class plugN9000B:
             return True
 
     def write(self, command):
-        return self.write(command)
+        return self.instrument.write(command)
