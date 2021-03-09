@@ -10,20 +10,45 @@ class plugU2049XA:
         print('Trying to connect to', address)
         try:
             self.instrument = pyvisa.ResourceManager().open_resource(address)
-            idn = self.instrument.query('*IDN?')
+            self.idn = self.instrument.query('*IDN?')
             print('Connected to\n', idn)
 
             #set output mode
             self.instrument.write(':FORMat:READings:DATA %s' % ('ASCii'))
         except:
             raise ("Couldn't connect to instrument " + address)
-    
+
     def close(self):
         """
         Disconnect.
         :return:
         """
         self.instrument.close()
+
+    def check_identity(): 
+        """
+        Returns the identity of the instrument
+        """
+        if not self.idn:
+            self.idn = self.instrument.query('*IDN?')
+        
+        return self.idn
+            
+
+    def reset():
+        return
+
+    def calibrate():
+        return
+
+    def get_measurement_type():
+        return
+    
+    def set_frequency():
+        return
+
+    def read_frequency():
+        return
 
     def read_power(mode = ""):
         """
