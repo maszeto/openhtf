@@ -33,13 +33,24 @@ class plugU2049XA:
             self.idn = self.instrument.query('*IDN?')
         
         return self.idn
-            
-
+    SCPI_U2040.write('*RST')
+SCPI_U2040.write(':CALibration:AUTO %s' % ('ON'))
+SCPI_U2040.write(':CALibration:AUTO %s' % ('OFF'))
+SCPI_U2040.write(':CALibration:AUTO %s' % ('ONCE'))
+SCPI_U2040.write(':SENSe:FREQuency:FIXed %s' % ('MIN'))
+SCPI_U2040.write(':SENSe:FREQuency:FIXed %s' % ('MAX'))
+SCPI_U2040.write(':SENSe:FREQuency:FIXed %s' % ('DEF'))
+temp_values = SCPI_U2040.query_binary_values(':SYSTem:HELP:HEADers?','s',False)
+headers = temp_values[0].decode().split('\n')
     def reset():
-        return
+        return self.instrument.write('*RST')
 
-    def calibrate():
-        return
+    def calibrate(mode):
+        if (mode is 'ONCE') or (mode is 'ON') or (mode is 'OFF'):
+            return self.write(':CALibration:AUTO %s' % (mode))
+        else:
+            print("ERROR: Incorrect mode, use 'ONCE', 'ON', or 'OFF'")
+            return None
 
     def get_measurement_type():
         return
