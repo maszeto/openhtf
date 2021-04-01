@@ -1,24 +1,34 @@
-"""
-Power Meter - Average - Dual Channel
-"""
-
-import pyvisa
+import logging
+import openhtf.plugs as plugs
+from openhtf.util import conf
 import time
+try:
+    import pyvisa
+except ImportError:
+    logging.error('Failed to import pyvisa, did you:\npip install pyvisa')
+    raise
 
-class plugN1914A:
+conf.declare('average_meter_address', default_value='TCPIP::192.168.10.63::INSTR',
+             description='Default IP address for Power Meter - Average - Dual Channel.')
+
+class plugN1914A(plugs.BasePlug):
 
     """
-    Class instrument to control E8267D Signal Generator
+    Class instrument to control N1914A Power Meter - Average - Dual Channel
     """
+    @conf.inject_positional_args
+    def __init__(self, average_meter_address):
+        rm = pyvisa.ResourceManager('@py')
+        self.instrument = rm.open_resource(average_meter_address)
+        idn = self.instrument.query('*IDN?')
+        print('Connected to', idn)  # We could probably use test info
 
-    def __init__(self, address):
-        print('Trying to connect to', address)
-        try:
-            self.instrument = pyvisa.ResourceManager().open_resource(address)
-            idn = self.instrument.query('*IDN?')
-            print('Connected to\n', idn)
-        except:
-            raise ("Couldn't connect to instrument " + address)
+    def close(self):
+        """
+        Disconnect.
+        :return:
+        """
+        self.instrument.close()
 
     def getPowerRelativeAC(self):
         """
@@ -43,13 +53,6 @@ class plugN1914A:
         else:
             print("Invalid mode " + mode + " given, using default mode.")
             return self.write(':CALCulate:GAIN:MAGNitude %s' % ('DEFault'))
-    
-    def close(self):
-        """
-        Disconnect.
-        :return:
-        """
-        self.instrument.close()
 
     def write(self, command):
         return self.instrument.write(command)

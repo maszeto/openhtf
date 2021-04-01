@@ -1,23 +1,29 @@
-import pyvisa
+import logging
+import openhtf.plugs as plugs
+from openhtf.util import conf
 import time
+try:
+    import pyvisa
+except ImportError:
+    logging.error('Failed to import pyvisa, did you:\npip install pyvisa')
+    raise
 
-class plugMSOX3104:
+conf.declare('power_supply_address', default_value='TCPIP::192.168.10.63::INSTR',
+             description='Default IP address for Triple Output Power Supply.')
+
+class plugMSOX3104(plugs.BasePlug):
 
     """
     Class instrument to control E36300 Series Triple Output Power Supply
     """
-
-    def __init__(self, address):
-
-        capture_count = 0 #used to store how many captures have been taken, so images are not overwritten
-
-        print('Trying to connect to', address)
-        try:
-            self.instrument = pyvisa.ResourceManager().open_resource(address)
-            idn = self.instrument.query('*IDN?')
-            print('Connected to\n', idn)
-        except:
-            raise ("Couldn't connect to instrument " + address)
+    @conf.inject_positional_args
+    def __init__(self, power_supply_address):
+        # used to store how many captures have been taken, so images are not overwritten
+        capture_count = 0
+        rm = pyvisa.ResourceManager('@py')
+        self.instrument = rm.open_resource(power_supply_address)
+        idn = self.instrument.query('*IDN?')
+        print('Connected to', idn)  # We could probably use test info
     
     def close(self):
         """

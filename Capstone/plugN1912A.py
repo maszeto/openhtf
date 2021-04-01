@@ -1,24 +1,27 @@
-"""
-Plug for the signal generator model N1912A, Power Meter - P Series - Dual Channel
-"""
-
-import pyvisa
+import logging
+import openhtf.plugs as plugs
+from openhtf.util import conf
 import time
+try:
+    import pyvisa
+except ImportError:
+    logging.error('Failed to import pyvisa, did you:\npip install pyvisa')
+    raise
 
-class plugN1912A:
+conf.declare('p_series_power_meter_address', default_value='TCPIP::192.168.10.63::INSTR',
+             description='Default IP address for Power Meter - P Series - Dual Channel.')
+
+class plugN1912A(plugs.BasePlug):
 
     """
-    Class instrument to control E8267D Signal Generator
+    Class instrument to control N1912A Power Meter - P Series - Dual Channel
     """
-
-    def __init__(self, address):
-        print('Trying to connect to', address)
-        try:
-            self.instrument = pyvisa.ResourceManager().open_resource(address)
-            idn = self.instrument.query('*IDN?')
-            print('Connected to\n', idn)
-        except:
-            raise ("Couldn't connect to instrument " + address)
+    @conf.inject_positional_args
+    def __init__(self, p_series_power_meter_address):
+        rm = pyvisa.ResourceManager('@py')
+        self.instrument = rm.open_resource(p_series_power_meter_address)
+        idn = self.instrument.query('*IDN?')
+        print('Connected to', idn)  # We could probably use test info
     
     def close(self):
         """

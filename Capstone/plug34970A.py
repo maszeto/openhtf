@@ -1,16 +1,34 @@
-import pyvisa
+import logging
+import openhtf.plugs as plugs
+from openhtf.util import conf
 import time
-# start of Data_Logger_for_Temp_and_Voltage
+try:
+    import pyvisa
+except ImportError:
+    logging.error('Failed to import pyvisa, did you:\npip install pyvisa')
+    raise
 
-class plug34970A:
-	def _init_(self, address):
-		print('Try to connect to', address)
-		try:
-			self.instrument = pyvisa.ResourceManager().open_resource(address)
-			idn = self.instrument.query('*IDN?')
-			print('Can not connect to instrument' + address)
-		except:
-			raise 'Can not connect to instrument' + address
+conf.declare('data_logger_address', default_value='TCPIP::192.168.10.63::INSTR',
+             description='Default IP address for Data Logger.')
+
+class plug34970A(plugs.BasePlug):
+	
+	"""
+    Class instrument to control 34970A Temp and Voltage Data Logger
+    """
+    @conf.inject_positional_args
+    def __init__(self, data_logger_address):
+        rm = pyvisa.ResourceManager('@py')
+        self.instrument = rm.open_resource(data_logger_address)
+        idn = self.instrument.query('*IDN?')
+        print('Connected to', idn)  # We could probably use test info
+    
+    def close(self):
+        """
+        Disconnect.
+        :return:
+        """
+        self.instrument.close()
 			
 	def reset(self):
 		""" reset """
@@ -46,8 +64,6 @@ class plug34970A:
 	def fetch(self):
 		"""Fetches data from memory after the scan list was completed """
 		readings = self.instrument.query(':FETCh?')
-		
-	def close(self):
-		self.instrument.close()
 
-# end of Data_Logger_for_Temp_and_Voltage
+	def write(self, command):
+        return self.write(command)

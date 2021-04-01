@@ -1,24 +1,34 @@
-"""
-Plug for the signal generator model E5052B
-"""
-
-import pyvisa
+import logging
+import openhtf.plugs as plugs
+from openhtf.util import conf
 import time
+try:
+    import pyvisa
+except ImportError:
+    logging.error('Failed to import pyvisa, did you:\npip install pyvisa')
+    raise
 
-class plugE5052B:
+conf.declare('sig_gen_address', default_value='TCPIP::192.168.10.63::INSTR',
+             description='Default IP address for Signal Generator.')
+
+class plugE5052B(plugs.BasePlug):
 
     """
-    Class instrument to control E8267D Signal Generator
+    Class instrument to control E5052B Signal Generator
     """
+    @conf.inject_positional_args
+    def __init__(self, sig_gen_address):
+        rm = pyvisa.ResourceManager('@py')
+        self.instrument = rm.open_resource(sig_gen_address)
+        idn = self.instrument.query('*IDN?')
+        print('Connected to', idn)  # We could probably use test info
 
-    def __init__(self, address):
-        print('Trying to connect to', address)
-        try:
-            self.instrument = pyvisa.ResourceManager().open_resource(address)
-            idn = self.instrument.query('*IDN?')
-            print('Connected to\n', idn)
-        except:
-            raise ("Couldn't connect to instrument " + address)
+    def close(self):
+        """
+        Disconnect.
+        :return:
+        """
+        self.instrument.close()
     
     def setPowerDelay(self, num):
         """
@@ -44,13 +54,6 @@ class plugE5052B:
         This command gets fixed voltage power value at voltage control sweep.
         """
         return self.write(':SOURce:VOLTage:POWer:LEVel:AMPLitude?')
-
-    def close(self):
-        """
-        Disconnect.
-        :return:
-        """
-        self.instrument.close()
 
     def write(self, command):
         return self.instrument.write(command)

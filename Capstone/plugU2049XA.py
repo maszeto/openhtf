@@ -1,20 +1,27 @@
-import pyvisa
+import logging
+import openhtf.plugs as plugs
+from openhtf.util import conf
 import time
+try:
+    import pyvisa
+except ImportError:
+    logging.error('Failed to import pyvisa, did you:\npip install pyvisa')
+    raise
+
+conf.declare('power_sensor_address', default_value='TCPIP::192.168.10.63::INSTR',
+             description='Default IP address for Dynamic Range Power Sensor.')
 
 class plugU2049XA:
 
     """
     Class instrument to control U2049XA LAN Wide Dyamic Range Power Sensor
     """
-
-    def __init__(self, address):
-        print('Trying to connect to', address)
-        try:
-            self.instrument = pyvisa.ResourceManager().open_resource(address)
-            idn = self.instrument.query('*IDN?')
-            print('Connected to\n', idn)
-        except:
-            raise ("Couldn't connect to instrument " + address)
+    @conf.inject_positional_args
+    def __init__(self, power_sensor_address):
+        rm = pyvisa.ResourceManager('@py')
+        self.instrument = rm.open_resource(power_sensor_address)
+        idn = self.instrument.query('*IDN?')
+        print('Connected to', idn)  # We could probably use test info
     
     def close(self):
         """

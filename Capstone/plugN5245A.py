@@ -1,17 +1,33 @@
-import pyvisa
+import logging
+import openhtf.plugs as plugs
+from openhtf.util import conf
 import time
-# PNA Network ANalyzer N5245A
+try:
+    import pyvisa
+except ImportError:
+    logging.error('Failed to import pyvisa, did you:\npip install pyvisa')
+    raise
 
+conf.declare('pna_net_analyzer_address', default_value='TCPIP::192.168.10.63::INSTR',
+             description='Default IP address for PNA Network ANalyzer.')
 
-class plugN5245A:
-	def _init_(self, address):
-		print('Try to connect to', address)
-		try:
-			self.instrument = pyvisa.ResourceManager().open_resource(address)
-			idn = self.instrument.query('*IDN?')
-			print('Can not connect to instrument' + address)
-		except:
-			raise 'Can not connect to instrument' + address
+class plugN5245A(plugs.BasePlug):
+	"""
+    Class instrument to control N5245A PNA Network ANalyzer
+    """
+    @conf.inject_positional_args
+    def __init__(self, pna_net_analyzer_address):
+        rm = pyvisa.ResourceManager('@py')
+        self.instrument = rm.open_resource(pna_net_analyzer_address)
+        idn = self.instrument.query('*IDN?')
+        print('Connected to', idn)  # We could probably use test info
+    
+    def close(self):
+        """
+        Disconnect.
+        :return:
+        """
+        self.instrument.close()
 			
 	def reset(self):
 		""" reset analyzer"""
@@ -67,6 +83,6 @@ class plugN5245A:
 	def measure_S11(self):
 		"""set the instrument to measure S21 port"""
 		self.instrument.write(':CALCulate1:PARameter:DEFine "%s",%s' % ('MyMeasu', 'S21'))
-			
-	def close(self):
-		self.instrument.close()
+
+	def write(self, command):
+        return self.write(command)
