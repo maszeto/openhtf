@@ -8,7 +8,7 @@ except ImportError:
     logging.error('Failed to import pyvisa, did you:\npip install pyvisa')
     raise
 
-conf.declare('power_supply_address', default_value='TCPIP::192.168.10.63::INSTR',
+conf.declare('power_supply_address_1', default_value='TCPIP::192.168.10.63::INSTR',
              description='Default IP address for Triple Output Power Supply.')
 
 class plugMSOX3104(plugs.BasePlug):
@@ -21,7 +21,7 @@ class plugMSOX3104(plugs.BasePlug):
         # used to store how many captures have been taken, so images are not overwritten
         capture_count = 0
         rm = pyvisa.ResourceManager('@py')
-        self.instrument = rm.open_resource(power_supply_address)
+        self.instrument = rm.open_resource(power_supply_address_1)
         idn = self.instrument.query('*IDN?')
         print('Connected to', idn)  # We could probably use test info
     
@@ -75,7 +75,7 @@ class plugMSOX3104(plugs.BasePlug):
         """
 
         #add an annotation if specified 
-        if text not None:
+        if text is not None:
             self.write(':DISPlay:ANNotation1 %d' % (1))
             self.write(':DISPlay:ANNotation1:TEXT "%s"' % (text)) 
         
