@@ -8,7 +8,7 @@ except ImportError:
     logging.error('Failed to import pyvisa, did you:\npip install pyvisa')
     raise
 
-conf.declare('sig_gen_address', default_value='TCPIP::192.168.10.63::INSTR',
+conf.declare('sig_gen_address_1', default_value='TCPIP::192.168.10.63::INSTR',
              description='Default IP address for Signal Generator.')
 
 class plugE8267D(plugs.BasePlug):
@@ -19,7 +19,7 @@ class plugE8267D(plugs.BasePlug):
     @conf.inject_positional_args
     def __init__(self, sig_gen_address):
         rm = pyvisa.ResourceManager('@py')
-        self.instrument = rm.open_resource(sig_gen_address)
+        self.instrument = rm.open_resource(sig_gen_address_1)
         idn = self.instrument.query('*IDN?')
         print('Connected to', idn)  # We could probably use test info
     
