@@ -11,6 +11,7 @@ except ImportError:
 conf.declare('oscilloscope_address', default_value='TCPIP::192.168.10.63::INSTR',
              description='Default IP address for Oscilloscope - Infiniium S Series 2.')
 
+
 class plugDSOS204A(plugs.BasePlug):
 
     """
@@ -22,7 +23,7 @@ class plugDSOS204A(plugs.BasePlug):
         self.instrument = rm.open_resource(oscilloscope_address)
         idn = self.instrument.query('*IDN?')
         print('Connected to', idn)  # We could probably use test info
-    
+
     def close(self):
         """
         Disconnect.

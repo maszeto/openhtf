@@ -11,6 +11,7 @@ except ImportError:
 conf.declare('analog_sig_gen_address', default_value='TCPIP::192.168.10.63::INSTR',
              description='Default IP address for Analog Signal Generator.')
 
+
 class plugE8257D:
 
     """
@@ -22,7 +23,7 @@ class plugE8257D:
         self.instrument = rm.open_resource(analog_sig_gen_address)
         idn = self.instrument.query('*IDN?')
         print('Connected to', idn)  # We could probably use test info
-    
+
     def close(self):
         """
         Disconnect.
@@ -46,7 +47,8 @@ class plugE8257D:
     # Set output power on sig gen
     def set_power(self, decibels):
         if(self.check_power(decibels)):
-            self.write(':SOURce:POWer:LEVel:IMMediate:AMPLitude ' + str(decibels))
+            self.write(
+                ':SOURce:POWer:LEVel:IMMediate:AMPLitude ' + str(decibels))
 
     # Check if frequency is within the bounds
     def check_frequency(self, hertz):

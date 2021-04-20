@@ -10,6 +10,7 @@ except ImportError:
 conf.declare('dmm_address', default_value='TCPIP::192.168.10.62::INSTR',
              description='Default IP address for Digital Multimeter.')
 
+
 class plug34461A(plugs.BasePlug):
 
     """
@@ -17,7 +18,8 @@ class plug34461A(plugs.BasePlug):
     """
     @conf.inject_positional_args
     def __init__(self, dmm_address):
-        self.instrument = pyvisa.ResourceManager('@py').open_resource(dmm_address)
+        self.instrument = pyvisa.ResourceManager(
+            '@py').open_resource(dmm_address)
         idn = self.instrument.query('*IDN?')
         print('Connected to', idn)
 
@@ -76,8 +78,8 @@ class plug34461A(plugs.BasePlug):
         continuity = values[0]
 
         if continuity <= 10:
-            #10 is the threshold for the beep
-            return True 
+            # 10 is the threshold for the beep
+            return True
         else:
             return False
 
@@ -90,4 +92,3 @@ class plug34461A(plugs.BasePlug):
     def write(self, command):
         """ Handle all writes to instrument """
         self.instrument.write(command)
-        

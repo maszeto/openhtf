@@ -11,6 +11,7 @@ except ImportError:
 conf.declare('average_meter_address', default_value='TCPIP::192.168.10.63::INSTR',
              description='Default IP address for Power Meter - Average - Dual Channel.')
 
+
 class plugN1914A(plugs.BasePlug):
 
     """
@@ -46,10 +47,10 @@ class plugN1914A(plugs.BasePlug):
 
         elif(mode is "MIN"):
             return self.write(':CALCulate:GAIN:MAGNitude %s' % ('MINimum'))
-        
+            
         elif(mode is "DEF"):
             return self.write(':CALCulate:GAIN:MAGNitude %s' % ('DEFault'))
-        
+
         else:
             print("Invalid mode " + mode + " given, using default mode.")
             return self.write(':CALCulate:GAIN:MAGNitude %s' % ('DEFault'))

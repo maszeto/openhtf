@@ -23,7 +23,7 @@ class plugN9000B(plugs.BasePlug):
         self.instrument = rm.open_resource(sig_analyzer_address)
         idn = self.instrument.query('*IDN?')
         print('Connected to', idn)  # We could probably use test info
-    
+
     def close(self):
         """
         Disconnect.
@@ -33,7 +33,7 @@ class plugN9000B(plugs.BasePlug):
 
     # TODO: Set frequency on sig analyzer
     def set_frequency(self, type, hertz):
-        # 
+        #
         if(self.check_frequency(hertz)):
             if(type == "Center"):
                 self.write('FREQuency:CENTer ' + str(hertz))

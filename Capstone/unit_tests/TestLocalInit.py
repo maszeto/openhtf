@@ -85,6 +85,7 @@ class TestPlug346CK01(unittest.TestCase):
         except Exception as e:
             print(e)
             self.assertTrue("VI_ERROR_RSRC_NFOUND" in  str(e))
+
 class TestPlug34970A(unittest.TestCase):
     def setUp(self):
         self.curPlug = None
@@ -114,6 +115,7 @@ class TestPlug34970A(unittest.TestCase):
         except Exception as e:
             print(e)
             self.assertTrue("VI_ERROR_RSRC_NFOUND" in  str(e))
+
 class TestPlugDSOS204A(unittest.TestCase):
     def setUp(self):
         self.curPlug = None
@@ -143,6 +145,7 @@ class TestPlugDSOS204A(unittest.TestCase):
         except Exception as e:
             print(e)
             self.assertTrue("VI_ERROR_RSRC_NFOUND" in  str(e))
+
 class TestPlugE36313A(unittest.TestCase):
     def setUp(self):
         self.curPlug = None
@@ -172,6 +175,7 @@ class TestPlugE36313A(unittest.TestCase):
         except Exception as e:
             print(e)
             self.assertTrue("VI_ERROR_RSRC_NFOUND" in  str(e))
+
 class TestPlugE5052B(unittest.TestCase):
     def setUp(self):
         self.curPlug = None
@@ -201,6 +205,7 @@ class TestPlugE5052B(unittest.TestCase):
         except Exception as e:
             print(e)
             self.assertTrue("VI_ERROR_RSRC_NFOUND" in  str(e))
+
 class TestPlugE8257D(unittest.TestCase):
     
     def setUp(self):

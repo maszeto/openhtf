@@ -15,6 +15,7 @@ except ImportError:
 conf.declare('pre_amp_address', default_value='TCPIP::192.168.10.63::INSTR',
              description='Default IP address for USB Pre-amplifer.')
 
+
 class plugU7227F(plugs.BasePlug):
 
     """
@@ -26,7 +27,7 @@ class plugU7227F(plugs.BasePlug):
         self.instrument = rm.open_resource(pre_amp_address)
         idn = self.instrument.query('*IDN?')
         print('Connected to', idn)  # We could probably use test info
-    
+
     def close(self):
         """
         Disconnect.

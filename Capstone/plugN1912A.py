@@ -11,6 +11,7 @@ except ImportError:
 conf.declare('p_series_power_meter_address', default_value='TCPIP::192.168.10.63::INSTR',
              description='Default IP address for Power Meter - P Series - Dual Channel.')
 
+
 class plugN1912A(plugs.BasePlug):
 
     """
@@ -22,7 +23,7 @@ class plugN1912A(plugs.BasePlug):
         self.instrument = rm.open_resource(p_series_power_meter_address)
         idn = self.instrument.query('*IDN?')
         print('Connected to', idn)  # We could probably use test info
-    
+
     def close(self):
         """
         Disconnect.

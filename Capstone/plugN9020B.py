@@ -11,6 +11,7 @@ except ImportError:
 conf.declare('mxa_sig_analyzer_address', default_value='TCPIP::192.168.10.63::INSTR',
              description='Default IP address for UXA Signal Analyzer.')
 
+
 class plugN9020B(plugs.BasePlug):
 
     """
@@ -22,13 +23,13 @@ class plugN9020B(plugs.BasePlug):
         self.instrument = rm.open_resource(mxa_sig_analyzer_address)
         idn = self.instrument.query('*IDN?')
         print('Connected to', idn)  # We could probably use test info
-    
+
     def close(self):
         """
         Disconnect.
         :return:
         """
         self.instrument.close()
-    
+
     def write(self, command):
         return self.write(command)

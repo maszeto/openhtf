@@ -11,6 +11,7 @@ except ImportError:
 conf.declare('sig_gen_address', default_value='TCPIP::192.168.10.63::INSTR',
              description='Default IP address for Signal Generator.')
 
+
 class plugE5052B(plugs.BasePlug):
 
     """
@@ -29,13 +30,13 @@ class plugE5052B(plugs.BasePlug):
         :return:
         """
         self.instrument.close()
-    
+
     def setPowerDelay(self, num):
         """
         Sets the power delay to num in seconds. 
         """
         return (self.write(':SOURce:VOLTage:POWer:DELay %G' % (num)))
-    
+
     def getPowerDelay(self):
         """
         Gets the power delay to num in seconds. 

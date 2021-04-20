@@ -26,6 +26,8 @@ from datetime import datetime
 
  
 """
+
+
 def save_csv(timestamp, data, prefix='test_voltage', folder_path=''):
     """
     Creates csv files with a list of arrays, using timestamp creates a unique
@@ -42,7 +44,7 @@ def save_csv(timestamp, data, prefix='test_voltage', folder_path=''):
     # Write CSV file
     for idx, rows in enumerate(data):
         file_name = folder_path + str(prefix) + '_' + timestamp \
-                    + '_' + str(idx) + '.csv'
+            + '_' + str(idx) + '.csv'
         attempts = 4
         while attempts > 0:
             try:
@@ -54,8 +56,8 @@ def save_csv(timestamp, data, prefix='test_voltage', folder_path=''):
             except PermissionError:
                 logger.error(f"Failed to save CSV file attempt {attempts}")
                 file_name = folder_path + str(prefix) + '_' + timestamp \
-                    + '_' + str(idx) + '_attempt_' + str(attempts) + '_' + '.csv'
-
+                    + '_' + str(idx) + '_attempt_' + \
+                    str(attempts) + '_' + '.csv'
 
 
 def voltage_divider_test():
@@ -65,44 +67,42 @@ def voltage_divider_test():
 
     DUT = input("Please enter DUT serial number: ")
 
-    tester = input ("Please enter your name: ")
+    tester = input("Please enter your name: ")
 
-
-    #first get resistor value 
+    # first get resistor value
     R_L = input("Please enter resistor value in ohms")
 
-    #vector to hold voltage values 
-    V_IN = [5,6,7,8,9,10]
+    # vector to hold voltage values
+    V_IN = [5, 6, 7, 8, 9, 10]
 
-    #output values
+    # output values
     i_L = []
     V_L = []
     expected = []
-    diff = [] #holds expected - measured 
-    #initialize instruments 
+    diff = []  # holds expected - measured
+    # initialize instruments
     power_supply_ip = "TCPIP::192.168.10.51::inst0::INSTR"
     dmm_ip = "TCPIP::192.168.10.52::inst0::INSTR"
     power_supply = plugE36313A(power_supply_ip)
     dmm = plug34461A(dmm_ip)
 
-
-    #iterate through the V_IN values 
-
+    # iterate through the V_IN values
     for voltage in V_IN:
 
-        #set the voltage
-        power_supply.set_voltage(1,voltage)
+        # set the voltage
+        power_supply.set_voltage(1, voltage)
 
-        #calculate the expected
+        # calculate the expected
         expected.append(power_supply.read_voltage(1) / 2)
 
-        #read the actual 
+        # read the actual
         V_L.append(dmm.read_voltage(2))
 
-        #calculate the diff
+        # calculate the diff
         diff.append(expected[-1] - V_L[-1])
 
-        print("Calculated: {} Measured: {} Diff: {}".format(expected[-1], V_L[-1], diff[-1]))
+        print("Calculated: {} Measured: {} Diff: {}".format(
+            expected[-1], V_L[-1], diff[-1]))
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M")
     save_csv(timestamp, V_L)
@@ -110,12 +110,7 @@ def voltage_divider_test():
     power_supply.close()
     dmm.close()
 
+
 if __name__ == "__main__":
     voltage_divider_test()
-
-
-
-
-
-
-
+    

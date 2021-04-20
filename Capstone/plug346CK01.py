@@ -11,6 +11,7 @@ except ImportError:
 conf.declare('noise_source_address', default_value='TCPIP::192.168.10.63::INSTR',
              description='Default IP address for Agilent Noise Source.')
 
+
 class plug346CK01(plugs.BasePlug):
 
     """
@@ -22,7 +23,7 @@ class plug346CK01(plugs.BasePlug):
         self.instrument = rm.open_resource(noise_source_address)
         idn = self.instrument.query('*IDN?')
         print('Connected to', idn)  # We could probably use test info
-    
+
     def close(self):
         """
         Disconnect.

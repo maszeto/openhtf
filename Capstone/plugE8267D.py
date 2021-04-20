@@ -11,6 +11,7 @@ except ImportError:
 conf.declare('sig_gen_address_1', default_value='TCPIP::192.168.10.63::INSTR',
              description='Default IP address for Signal Generator.')
 
+
 class plugE8267D(plugs.BasePlug):
 
     """
@@ -22,7 +23,7 @@ class plugE8267D(plugs.BasePlug):
         self.instrument = rm.open_resource(sig_gen_address_1)
         idn = self.instrument.query('*IDN?')
         print('Connected to', idn)  # We could probably use test info
-    
+
     def close(self):
         """
         Disconnect.
@@ -39,14 +40,15 @@ class plugE8267D(plugs.BasePlug):
         if(self.check_frequency(hertz)):
             self.write(':SOURce:FREQuency:CW ' + str(hertz))
 
-
     # Set output power on sig gen
+
     def set_power(self, decibels):
         if(self.check_power(decibels)):
-            self.write(':SOURce:POWer:LEVel:IMMediate:AMPLitude ' + str(decibels))
-            
+            self.write(
+                ':SOURce:POWer:LEVel:IMMediate:AMPLitude ' + str(decibels))
 
     # Check if frequency is within the bounds
+
     def check_frequency(self, hertz):
         if(hertz < (25*10**3) or hertz > (20*10**9)):
             return False
@@ -59,7 +61,6 @@ class plugE8267D(plugs.BasePlug):
             return False
         else:
             return True
-
 
     def write(self, command):
         return self.write(command)

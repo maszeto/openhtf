@@ -11,6 +11,7 @@ except ImportError:
 conf.declare('power_sensor_address', default_value='TCPIP::192.168.10.63::INSTR',
              description='Default IP address for Dynamic Range Power Sensor.')
 
+
 class plugU2049XA:
 
     """
@@ -22,7 +23,7 @@ class plugU2049XA:
         self.instrument = rm.open_resource(power_sensor_address)
         idn = self.instrument.query('*IDN?')
         print('Connected to', idn)  # We could probably use test info
-    
+
     def close(self):
         """
         Disconnect.
@@ -33,17 +34,20 @@ class plugU2049XA:
     # Get the current power reading
     def read_power_instant(self, trace, percentage):
         if check_percentage(percentage):
-            self.write(':TRACe' + str(trace) + ':MEASurement:INSTant:REFerence? ' + str(percentage))
-
+            self.write(':TRACe' + str(trace) +
+                       ':MEASurement:INSTant:REFerence? ' + str(percentage))
 
     # Read the power over a set duration
+
     def read_power_over_time(self, trace, pulse, mode):
         if check_power_constraints(trace, pulse):
-            self.write(':TRACe' + str(trace) + ':MEASurement:PULSe' + str(pulse) + ':' + mode + '?')
+            self.write(':TRACe' + str(trace) +
+                       ':MEASurement:PULSe' + str(pulse) + ':' + mode + '?')
 
     # Changes the way the instrument will read the measurement
     def measurement_speed(self, trigger, sequence):
-        self.write(':TRIGger' + str(trigger) + ':SEQuence' + str(sequence) + ':IMMediate')
+        self.write(':TRIGger' + str(trigger) + ':SEQuence' +
+                   str(sequence) + ':IMMediate')
 
     # Check if the correct power constraint value was given
     def check_power_constraint(self, trace, pulse):
